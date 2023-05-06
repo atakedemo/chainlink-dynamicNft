@@ -1,11 +1,15 @@
-const Moralis = require("moralis/node");
+//const Moralis = require("moralis/node");
+//const express = require("express");
+const Moralis = require("moralis").default;
+const { EvmChain } = require("@moralisweb3/common-evm-utils");
+
 const fs = require("fs");
 const { createCanvas, loadImage } = require("canvas");
 require("dotenv").config();
 let canvas;
 let ctx;
 
-const ethers = Moralis.web3Library;
+//const ethers = Moralis.web3Library;
 
 const btoa = (text) => {
     return Buffer.from(text, "binary").toString("base64");
@@ -20,18 +24,26 @@ const exFunction = async (url, address, name) => {
     const masterKey = process.env.masterKey;
     await Moralis.start({ serverUrl, appId, masterKey});
     */
-   
+    const MORALIS_API_KEY = process.env.apiKey;
+    const chain = EvmChain.ETHEREUM;
+    await Moralis.start({apiKey: MORALIS_API_KEY,});
+
     // generate the new card image
     await iconCreating(url);
     await CardCreating(name);
 
     // upload the image and metadata on IPFS and encoding the URL, then return it
     const ipfs = await getURIonIPFS();
+    console.log("Parm IPFS!!")
+    console.log(ipfs);
+    /*
     const ipfsVar = ipfs.slice(34); // cut off "https://ipfs.moralis.io:2053/ipfs/"
     const len = ipfsVar.length / 2;
     const byte0 = ethers.utils.formatBytes32String(ipfsVar.slice(0, len));
     const byte1 = ethers.utils.formatBytes32String(ipfsVar.slice(len));
     return { "furi": byte0, "luri": byte1, "name": ethers.utils.formatBytes32String(name) }
+    */
+    return ipfs
 }
 
 const canvasInit = async (x, y) => {
@@ -91,10 +103,16 @@ const CardCreating = async (text) => {
 const uploadImage = async(data) => {
     // data from ./output/icon.png
     const base64 = await btoa(fs.readFileSync("./output/magicplank.png"));
+    /*
     const file = new Moralis.File("magicplank.png", { base64: `data:image/png;base64,${base64}` });
     await file.saveIPFS({ useMasterKey: true });
     console.log("IPFS address of Image: ", file.ipfs());
-    return file.ipfs();
+    */
+    const response = await Moralis.EvmApi.ipfs.uploadFolder();
+    console.log("IPFS address of Image: ", response);
+    console.log(response.toJSON());
+    //return file.ipfs();
+    return response.toJSON().path;
 }
 
 const getURIonIPFS = async() => {
@@ -105,11 +123,17 @@ const getURIonIPFS = async() => {
         "description": "This is DynamicNFT.",
         "image": imageURL
     }
-    
+    /*
     const file = new Moralis.File("file.json", { base64: btoa(JSON.stringify(metadata)) });
     await file.saveIPFS({ useMasterKey: true });
     console.log("IPFS address of metadata", file.ipfs());
     return file.ipfs();
+    */
+    const response = await Moralis.EvmApi.ipfs.uploadFolder();
+    console.log("IPFS address of Image: ", response);
+    console.log(response.toJSON());
+    //return file.ipfs();
+    return response.toJSON().path;
 }
 
 module.exports = {
