@@ -7,6 +7,7 @@ Chainlinkを使用したダイナミックnft（チュートリアル）
 ネットワーク|Polygon Mumbai
 Linkトークン(Mumbai)| 0x326C977E6efc84E512bB9C30f76E30c160eD06FB
 オラクルコントラクト| 0x678173a60d0f098af059e1a0ddf1c29d10a30473
+サンプルコントラクト(ERC721) | 0xD90224DbA00302EFEDd8C4E32FeF5e31a6276726
 
 
 # 手順
