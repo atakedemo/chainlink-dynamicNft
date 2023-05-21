@@ -7,17 +7,7 @@ const { API_URL_GOERLI, API_URL_MUMBAI,PRIVATE_KEY, API_KEY_MUMBAI } = process.e
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: {
-    compilers: [
-      {
-        version: "0.7.1",
-      },
-      {
-        version: "0.8.19",
-        settings: {},
-      },
-    ]
-  },
+  solidity: "0.8.19",
   defaultNetwork: "mumbai",
   networks: {
     mumbai: {
